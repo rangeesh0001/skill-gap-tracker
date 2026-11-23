@@ -84,6 +84,27 @@ Open `web/index.html` in a browser. Nothing is installed and no data leaves the 
 
 **Save in this browser** keeps the data in that browser only (it doesn't sync to other devices). **Load saved** brings it back. **Copy summary as text** copies the summary as tab-separated text you can paste into a sheet or email.
 
+## Worked example: FMCG shop floor
+
+`web/fmcg.html` applies the same method to a 10-person FMCG production team (filling, packing, mixing, maintenance, quality, stores and utilities) on 8 shop-floor skills, including EHS & safe work practices and quality & food safety.
+
+| | Result |
+|---|---|
+| Open skill gaps before training | 45 |
+| Levels of gap, before → after | 55 → 26 |
+| Gap closed | 29 levels (53%) |
+| Largest gap still open | EHS & safe work practices (9 levels, 40% closed) |
+
+The employee ratings and post-training scores are **illustrative**, not measured, and names are replaced with employee numbers. The skills and priorities are backed by shop-floor process records (downtime Pareto, line output against benchmark, manpower deployment), shown on the page.
+
+Rebuild the page from the workbook:
+
+```
+python build/build_fmcg_site.py path/to/FMCG_Shop_Floor_Skill_Gap_Tracker_Completed.xlsx
+```
+
+The script recalculates every gap and stops if its totals don't match the workbook's own Summary sheet.
+
 ## Limitations
 
 - **Sample data only.** Every person and rating in this repo is hypothetical. No real employee data is included.
@@ -105,6 +126,8 @@ These details aren't confirmed yet, so they're marked `[add: …]` in `case-stud
 README.md
 build/build_tracker.py     builds the Excel workbook
 web/index.html             the web tool
+web/fmcg.html              FMCG shop-floor results page
+build/build_fmcg_site.py   builds web/fmcg.html from the FMCG workbook
 out/                       generated workbooks
 case-study/CASE_STUDY.md   a worked run on the hypothetical sample
 ```
