@@ -6,6 +6,15 @@
 
 A team lead needs to know which Project Consultant skills each person still has to build, which skills need training first, and whether training closed the gaps. Without a shared record, those answers depend on memory, and the effect of training can't be shown.
 
+## Where this comes from
+
+During a 2-month internship at Godrej Consumer Products, Pondicherry, I worked on two sessions that sit behind two of the skills in this tracker:
+
+- **A LOTO (lockout/tagout) workshop for floor-level staff.** My role: [add: your role, e.g. ran / co-ran / supported]. Dates: [add: dates]. Attendance: [add: number of attendees]. Feedback collected: [add: yes or no, and how].
+- **A seminar and presentation for upper management.** My role: [add: your role]. Dates: [add: dates]. Audience: [add: who attended]. Outcome: [add: what was decided or changed, only if confirmed].
+
+These map to *Workshop facilitation & feedback* and *Presentation & communication*. No ratings or data from this internship are used in the tracker. The sample below is hypothetical.
+
 ## Approach
 
 1. **Skills from the role.** I took eight skills from a Project Consultant job description, with Project Consultant roles at Godrej Consumer Products in mind: scope and planning, timelines and resources, budget tracking, stakeholder management, risk management, presentation and communication, workshop facilitation and feedback, and the listed tools.

@@ -4,9 +4,18 @@ A small tool for finding and closing skill gaps for a Project Consultant role. I
 
 ## The problem
 
-A team lead needs to know which skills each person on a project team still has to build for the Project Consultant role, and whether training actually closed those gaps. That usually lives in people's heads or in scattered notes, so nobody can say which skills need training first or show what the training changed.
+Companies train heavily, but they cannot show which skill gaps exist in each role or whether training closed them, so training spend is hard to target and justify. Supporting facts: 59% of enterprise leaders say their organisation has an AI skills gap in 2026, even though most are already investing in AI training (DataCamp, 2026). L&D leaders are prioritising skills identification and gap analysis (SHRM, 2026).
 
-This tracker sets a required level for each skill, records a manager-confirmed level for each person, and calculates the gap before and after training.
+## The solution
+
+A tracker that, for one role:
+
+1. Lists the required skills and what each level means.
+2. Records a manager-confirmed level per person per skill (the employee's self-rating is not used for the gap).
+3. Calculates gap = max(0, required level − confirmed level).
+4. Records a re-rating after training.
+5. Calculates gap closed = gap before − gap after.
+6. Summarises by skill: people with a gap, total gap before and after, gap closed, and % closed.
 
 ## Who it's for
 
@@ -82,6 +91,13 @@ Open `web/index.html` in a browser. Nothing is installed and no data leaves the 
 - **No connection to an HR system.** Data is typed in by hand. Nothing syncs with an HRIS, LMS or training records.
 - The required levels are a proposal from one job description and haven't been validated with a hiring team.
 - The web tool saves in one browser only. Clearing browser data deletes it.
+
+## Open placeholders
+
+These details aren't confirmed yet, so they're marked `[add: …]` in `case-study/CASE_STUDY.md` ("Where this comes from"):
+
+- LOTO workshop: your role, dates, number of attendees, whether feedback was collected
+- Management seminar: your role, dates, audience, outcome
 
 ## Repo layout
 
