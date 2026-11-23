@@ -113,13 +113,6 @@ The script recalculates every gap and stops if its totals don't match the workbo
 - The required levels are a proposal from one job description and haven't been validated with a hiring team.
 - The web tool saves in one browser only. Clearing browser data deletes it.
 
-## Open placeholders
-
-These details aren't confirmed yet, so they're marked `[add: …]` in `case-study/CASE_STUDY.md` ("Where this comes from"):
-
-- LOTO workshop: your role, dates, number of attendees, whether feedback was collected
-- Management seminar: your role, dates, audience, outcome
-
 ## Repo layout
 
 ```

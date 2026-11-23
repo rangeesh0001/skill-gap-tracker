@@ -10,8 +10,8 @@ A team lead needs to know which Project Consultant skills each person still has 
 
 During a 2-month internship at Godrej Consumer Products, Pondicherry, I worked on two sessions that sit behind two of the skills in this tracker:
 
-- **A LOTO (lockout/tagout) workshop for floor-level staff.** My role: [add: your role, e.g. ran / co-ran / supported]. Dates: [add: dates]. Attendance: [add: number of attendees]. Feedback collected: [add: yes or no, and how].
-- **A seminar and presentation for upper management.** My role: [add: your role]. Dates: [add: dates]. Audience: [add: who attended]. Outcome: [add: what was decided or changed, only if confirmed].
+- **A LOTO (lockout/tagout) workshop for floor-level staff**, which I ran.
+- **A seminar and presentation for upper management**, which I presented.
 
 These map to *Workshop facilitation & feedback* and *Presentation & communication*. No ratings or data from this internship are used in the tracker. The sample below is hypothetical.
 
