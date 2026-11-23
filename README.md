@@ -4,7 +4,10 @@ A small tool for finding and closing skill gaps for a Project Consultant role. I
 
 ## The problem
 
-Companies train heavily, but they cannot show which skill gaps exist in each role or whether training closed them, so training spend is hard to target and justify. Supporting facts: 59% of enterprise leaders say their organisation has an AI skills gap in 2026, even though most are already investing in AI training (DataCamp, 2026). L&D leaders are prioritising skills identification and gap analysis (SHRM, 2026).
+Companies train heavily, but they cannot show which skill gaps exist in each role or whether training closed them, so training spend is hard to target and justify. Supporting facts:
+
+- 59% of enterprise leaders report an AI skills gap in their organisation, even though most organisations already offer some form of AI training. Source: DataCamp and YouGov survey of 500+ US and UK enterprise leaders ([DataCamp, *The State of Data and AI Literacy in 2026*](https://www.datacamp.com/blog/the-state-of-data-and-ai-literacy-in-2026-definitions-statistics-and-the-ai-skills-gap)).
+- L&D executives name skills identification and gap analysis among their priorities, alongside skills training. Source: SHRM survey of 223 L&D executives ([SHRM, *2026 L&D Executives: Priorities and Perspectives*](https://www.shrm.org/topics-tools/research/2026-ld-executives-priorities-perspectives)).
 
 ## The solution
 

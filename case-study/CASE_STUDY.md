@@ -8,7 +8,7 @@ A team lead needs to know which Project Consultant skills each person still has 
 
 ## Where this comes from
 
-During a 2-month internship at Godrej Consumer Products, Pondicherry, I worked on two sessions that sit behind two of the skills in this tracker:
+During a 2-month internship at Godrej Consumer Products, Pondicherry (1 April to 31 May), I worked on two sessions that sit behind two of the skills in this tracker:
 
 - **A LOTO (lockout/tagout) workshop for floor-level staff**, which I ran.
 - **A seminar and presentation for upper management**, which I presented.
