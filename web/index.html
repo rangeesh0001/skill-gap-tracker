@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Skill-Gap Tracker – Project Consultant</title>
+<style>
+  :root { --navy:#1F2F6B; --line:#d7dbe6; --muted:#5b6275; }
+  body { font-family: Georgia, "Liberation Serif", serif; color:#222; margin:0; padding:20px; background:#fff; }
+  h1 { color:var(--navy); font-size:22px; margin:0 0 4px; }
+  h2 { color:var(--navy); font-size:16px; border-bottom:1px solid var(--navy); padding-bottom:3px; margin:24px 0 10px; }
+  .note { color:var(--muted); font-size:13px; margin:0 0 8px; }
+  table { border-collapse:collapse; width:100%; font-size:13px; }
+  th, td { border:1px solid var(--line); padding:5px 6px; vertical-align:top; text-align:left; }
+  th { background:var(--navy); color:#fff; font-weight:normal; }
+  td.c, th.c { text-align:center; }
+  input, select { font:inherit; font-size:13px; padding:3px 4px; width:100%; box-sizing:border-box; }
+  input.short { width:auto; }
+  #before input { min-width:10em; }
+  button { font:inherit; font-size:13px; background:var(--navy); color:#fff; border:0; padding:5px 10px; cursor:pointer; margin-right:6px; }
+  button.plain { background:#eef0f6; color:var(--navy); }
+  .gap { display:block; font-size:11px; margin-top:2px; text-align:center; border-radius:3px; }
+  .g0 { background:#c8e6c9; } .g1 { background:#ffe082; } .g2 { background:#ef9a9a; }
+  .msg { color:var(--muted); font-size:12px; margin-left:8px; }
+  .scroll { overflow-x:auto; }
+</style>
+</head>
+<body>
+<h1>Skill-gap tracker: Project Consultant</h1>
+<p class="note">Enter manager-confirmed levels (1 to 4). The gap is the required level minus the confirmed level, never below 0. Data stays in this page. Use Save to keep it in this browser only.</p>
+
+<h2>1. Skill matrix</h2>
+<p class="note">Required levels are a proposal taken from the JD wording. Change them to match your standard.</p>
+<div class="scroll"><table id="matrix"></table></div>
+
+<h2>2. People and confirmed levels</h2>
+<p class="note">Add one row per person. Leave a level blank until it is confirmed.</p>
+<div>
+  <input id="pname" class="short" placeholder="Name">
+  <input id="prole" class="short" placeholder="Role / team">
+  <button id="add">Add person</button>
+</div>
+<div class="scroll"><table id="before" style="margin-top:8px"></table></div>
+
+<h2>3. After training</h2>
+<p class="note">Enter re-rated levels after training. Gap closed = gap before minus gap after, for rows with both.</p>
+<div class="scroll"><table id="after"></table></div>
+
+<h2>4. Summary</h2>
+<div class="scroll"><table id="summary"></table></div>
+<p style="margin-top:10px">
+  <button id="save" class="plain">Save in this browser</button>
+  <button id="load" class="plain">Load saved</button>
+  <button id="copy">Copy summary as text</button>
+  <span class="msg" id="msg"></span>
+</p>
+
+<script>
+// KEEP IN SYNC: build/build_tracker.py (SKILLS) has the same skill names and required levels.
+const DEFAULT_SKILLS = [
+  ["Scope & planning", 3],
+  ["Timelines & resources", 3],
+  ["Budget tracking", 2],
+  ["Stakeholder management", 3],
+  ["Risk management", 3],
+  ["Presentation & communication", 3],
+  ["Workshop facilitation & feedback", 3],
+  ["Tools (MS Office, G Suite, Monday.com, Zoom)", 2]
+];
+const KEY = "skillgap-project-consultant-v1";
+let state = {
+  skills: DEFAULT_SKILLS.map(([name, req]) => ({ name, req })),
+  people: []
+};
+const N = () => state.skills.length;
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+function gap(req, lvl) {
+  return (lvl == null || req == null) ? null : Math.max(0, req - lvl);
+}
+function levelSelect(value, attrs) {
+  let h = `<select ${attrs}><option value="">–</option>`;
+  for (let v = 1; v <= 4; v++) h += `<option value="${v}" ${value === v ? "selected" : ""}>${v}</option>`;
+  return h + "</select>";
+}
+function gapTag(g, extra = "") {
+  if (g == null) return "";
+  return `<span class="gap g${Math.min(g, 2)}">gap ${g}${extra}</span>`;
+}
+
+function renderMatrix() {
+  let h = `<tr><th>Skill</th><th class="c">Required level</th></tr>`;
+  state.skills.forEach((s, i) => {
+    h += `<tr><td><input value="${esc(s.name)}" data-k="skillname" data-i="${i}"></td>
+          <td class="c">${levelSelect(s.req, `data-k="skillreq" data-i="${i}"`)}</td></tr>`;
+  });
+  document.getElementById("matrix").innerHTML = h;
+}
+
+function renderBefore() {
+  let h = `<tr><th>Person</th><th>Role / team</th>`;
+  state.skills.forEach(s => h += `<th class="c">${esc(s.name)}</th>`);
+  h += `<th class="c">Open gaps</th><th></th></tr>`;
+  state.people.forEach((p, pi) => {
+    h += `<tr><td><input value="${esc(p.name)}" data-k="pname" data-p="${pi}"></td>
+          <td><input value="${esc(p.role)}" data-k="prole" data-p="${pi}"></td>`;
+    let open = 0;
+    state.skills.forEach((s, si) => {
+      const g = gap(s.req, p.before[si]);
+      if (g > 0) open++;
+      h += `<td class="c">${levelSelect(p.before[si], `data-k="before" data-p="${pi}" data-s="${si}"`)}${gapTag(g)}</td>`;
+    });
+    h += `<td class="c">${open}</td><td><button class="plain" data-k="remove" data-p="${pi}">Remove</button></td></tr>`;
+  });
+  if (!state.people.length) h += `<tr><td colspan="${N() + 4}" class="note">No people yet. Add one above.</td></tr>`;
+  document.getElementById("before").innerHTML = h;
+}
+
+function renderAfter() {
+  let h = `<tr><th>Person</th>`;
+  state.skills.forEach(s => h += `<th class="c">${esc(s.name)}</th>`);
+  h += `</tr>`;
+  state.people.forEach((p, pi) => {
+    h += `<tr><td>${esc(p.name || "(unnamed)")}</td>`;
+    state.skills.forEach((s, si) => {
+      const ga = gap(s.req, p.after[si]);
+      const gb = gap(s.req, p.before[si]);
+      const closed = (ga != null && gb != null) ? Math.max(0, gb - ga) : null;
+      h += `<td class="c">${levelSelect(p.after[si], `data-k="after" data-p="${pi}" data-s="${si}"`)}
+            ${gapTag(ga, closed != null ? ` · closed ${closed}` : "")}</td>`;
+    });
+    h += `</tr>`;
+  });
+  if (!state.people.length) h += `<tr><td colspan="${N() + 1}" class="note">Add people in section 2 first.</td></tr>`;
+  document.getElementById("after").innerHTML = h;
+}
+
+function summaryRows() {
+  return state.skills.map((s, si) => {
+    let withGap = 0, before = 0, after = 0, closed = 0, beforeBoth = 0;
+    state.people.forEach(p => {
+      const gb = gap(s.req, p.before[si]);
+      const ga = gap(s.req, p.after[si]);
+      if (gb != null) { before += gb; if (gb > 0) withGap++; }
+      if (ga != null) after += ga;
+      if (gb != null && ga != null) { closed += Math.max(0, gb - ga); beforeBoth += gb; }
+    });
+    return { name: s.name, withGap, before, after, closed,
+             pct: beforeBoth ? Math.round(closed / beforeBoth * 100) + "%" : "–" };
+  });
+}
+
+function renderSummary() {
+  let h = `<tr><th>Skill</th><th class="c">People with a gap</th><th class="c">Total gap before</th>
+           <th class="c">Total gap after</th><th class="c">Gap closed</th><th class="c">% closed</th></tr>`;
+  const rows = summaryRows();
+  rows.forEach(r => {
+    h += `<tr><td>${esc(r.name)}</td><td class="c">${r.withGap}</td><td class="c">${r.before}</td>
+          <td class="c">${r.after}</td><td class="c">${r.closed}</td><td class="c">${r.pct}</td></tr>`;
+  });
+  h += `<tr><td><b>Total</b></td><td class="c"><b>${rows.reduce((a, r) => a + r.withGap, 0)}</b></td>
+        <td class="c"><b>${rows.reduce((a, r) => a + r.before, 0)}</b></td>
+        <td class="c"><b>${rows.reduce((a, r) => a + r.after, 0)}</b></td>
+        <td class="c"><b>${rows.reduce((a, r) => a + r.closed, 0)}</b></td><td class="c"></td></tr>`;
+  document.getElementById("summary").innerHTML = h;
+}
+
+function renderAll() {
+  renderMatrix(); renderBefore(); renderAfter(); renderSummary();
+}
+
+document.body.addEventListener("change", e => {
+  const t = e.target, k = t.dataset.k;
+  if (!k) return;
+  if (k === "skillname") state.skills[+t.dataset.i].name = t.value;
+  if (k === "skillreq") state.skills[+t.dataset.i].req = t.value === "" ? null : Number(t.value);
+  if (k === "pname") state.people[+t.dataset.p].name = t.value;
+  if (k === "prole") state.people[+t.dataset.p].role = t.value;
+  if (k === "before") state.people[+t.dataset.p].before[+t.dataset.s] = t.value === "" ? null : Number(t.value);
+  if (k === "after") state.people[+t.dataset.p].after[+t.dataset.s] = t.value === "" ? null : Number(t.value);
+  renderAll();
+});
+
+document.body.addEventListener("click", e => {
+  const t = e.target;
+  if (t.dataset.k === "remove") {
+    state.people.splice(+t.dataset.p, 1);
+    renderAll();
+  }
+});
+
+document.getElementById("add").addEventListener("click", () => {
+  const name = document.getElementById("pname").value.trim();
+  const role = document.getElementById("prole").value.trim();
+  if (!name) { flash("Enter a name first."); return; }
+  state.people.push({ name, role, before: Array(N()).fill(null), after: Array(N()).fill(null) });
+  document.getElementById("pname").value = "";
+  document.getElementById("prole").value = "";
+  renderAll();
+});
+
+document.getElementById("save").addEventListener("click", () => {
+  try { localStorage.setItem(KEY, JSON.stringify(state)); flash("Saved in this browser."); }
+  catch (err) { flash("Saving is not available here. Copy the summary instead."); }
+});
+document.getElementById("load").addEventListener("click", () => {
+  try {
+    const saved = localStorage.getItem(KEY);
+    if (!saved) { flash("Nothing saved yet."); return; }
+    state = JSON.parse(saved);
+    renderAll();
+    flash("Loaded.");
+  } catch (err) { flash("Could not load saved data."); }
+});
+document.getElementById("copy").addEventListener("click", async () => {
+  const lines = ["Skill\tPeople with gap\tGap before\tGap after\tGap closed\t% closed"];
+  const rows = summaryRows();
+  rows.forEach(r => lines.push([r.name, r.withGap, r.before, r.after, r.closed, r.pct].join("\t")));
+  const total = k => rows.reduce((a, r) => a + r[k], 0);
+  lines.push(["Total", total("withGap"), total("before"), total("after"), total("closed"), ""].join("\t"));
+  try { await navigator.clipboard.writeText(lines.join("\n")); flash("Summary copied."); }
+  catch (err) { flash("Copy is blocked here. Select the summary table and copy it."); }
+});
+
+function flash(text) {
+  const m = document.getElementById("msg");
+  m.textContent = text;
+  setTimeout(() => { if (m.textContent === text) m.textContent = ""; }, 3000);
+}
+
+renderAll();
+</script>
+</body>
+</html>
