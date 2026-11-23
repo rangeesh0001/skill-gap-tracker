@@ -13,7 +13,7 @@ During a 2-month internship at Godrej Consumer Products, Pondicherry, I worked o
 - **A LOTO (lockout/tagout) workshop for floor-level staff**, which I ran.
 - **A seminar and presentation for upper management**, which I presented.
 
-These map to *Workshop facilitation & feedback* and *Presentation & communication*. No ratings or data from this internship are used in the tracker. The sample below is hypothetical.
+These map to *Workshop facilitation & feedback* and *Presentation & communication*. No employee ratings from this internship are used. The FMCG results page (`web/fmcg.html`) draws on shop-floor process records (downtime, line output, manpower deployment) to choose its skills, but its employee ratings are illustrative. The sample below is hypothetical.
 
 ## Approach
 
